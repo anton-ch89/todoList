@@ -6,9 +6,9 @@ const
     todoList = document.querySelector('.todo-list'),
     todoCompleted = document.querySelector('.todo-completed');
 let todoData = [];
+let data ='';
 
 const addTodo = function () {
-
     todoList.textContent = '';
     todoCompleted.textContent = '';
     todoData.forEach((item, i) => {
@@ -27,6 +27,7 @@ const addTodo = function () {
         const completeBtn = newDo.querySelector('.todo-complete');
         completeBtn.addEventListener('click', () => {
             item.completed = !item.completed;
+            localStorage.setItem('todoData', JSON.stringify(data));
             addTodo();
         });
         const removeBtn = newDo.querySelector('.todo-remove');
@@ -34,6 +35,7 @@ const addTodo = function () {
             if (i > -1) {
                 todoData.splice(i, 1);
             }
+            localStorage.setItem('todoData', JSON.stringify(data));
             addTodo();
         });
 
@@ -44,10 +46,10 @@ const addTodo = function () {
 todoControl.addEventListener('submit', e => {
     e.preventDefault();
     const newTodo = {
-        value: headerInput.value,
+        value: headerInput.value.trim(),
         completed: false,
     };
-    if (headerInput.value !== '') {
+    if (headerInput.value.trim() !== '') {
         todoData.push(newTodo);
     }
     addTodo();
@@ -55,7 +57,7 @@ todoControl.addEventListener('submit', e => {
 });
 
 const showData = () => {
-    let data = JSON.parse(localStorage.getItem('todoData'));
+    data = JSON.parse(localStorage.getItem('todoData'));
     if (data !== null) {
         todoData = data;
     }
@@ -63,7 +65,11 @@ const showData = () => {
 
 todoControl.addEventListener('submit', () => {
     localStorage.setItem('todoData', JSON.stringify(todoData));
+    console.log(todoData);
     showData();
 });
+
+
+
 showData();
 addTodo();
